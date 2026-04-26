@@ -79,7 +79,7 @@ weekshortday           # Example: "Fri"
 date                   # Example: "2023-01-13"
 precipitation          # Example: "29 %"
 precipitationfull      # Example: "Precipitation 29 %"
-umbrellaindex          # Example: "It’s going to rain over the next two hours, so do bring your umbrella"
+umbrellaIndex          # Example: "It’s going to rain over the next two hours, so do bring your umbrella"
 daySummary0            # Example: "The skies will be cloudy." (HINT: MSN only, for other services an empty string is supplied)
 daySummary1            # Example: "Blustery winds will accompany a high of 6°." (HINT: MSN only, for other services an empty string is supplied)
 nightSummary0          # Example: "The skies will be mostly clear." (HINT: MSN only, for other services an empty string is supplied)
