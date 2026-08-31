@@ -311,10 +311,10 @@ class WeatherHandler():
 		if isfile(CACHEFILE):
 			remove(CACHEFILE)
 		mode = {"MSN": "msn", "OpenMeteo": "omw", "OpenWeather": "owm"}.get(config.plugins.OAWeather.weatherservice.value, "msn")
-		self.WI.setmode(mode, config.plugins.OAWeather.apikey.value)
+		self.WI.set_mode(mode, config.plugins.OAWeather.apikey.value)
 		if self.WI.error:
 			print(self.WI.error)
-			self.WI.setmode()  # fallback to MSN
+			self.WI.set_mode()  # fallback to MSN
 		if self.session:
 			iconpath = config.plugins.OAWeather.iconset.value
 			iconpath = join(ICONSETROOT, iconpath) if iconpath else join(PLUGINPATH, "Icons")
@@ -429,7 +429,7 @@ class OAWeatherOverview(Screen):
 			self[f"weekday{day}_temp"].text = "%s %s|%s %s\n%s" % (highTemp, tempunit, lowTemp, tempunit, text)
 
 	def keyOk(self):
-		if weatherhelper.favoriteList and weatherhandler.WI.getDataReady():
+		if weatherhelper.favoriteList and weatherhandler.WI.get_data_ready():
 			self.session.open(OAWeatherDetailview, weatherhelper.favoriteList[self.currFavIdx])
 
 	def favoriteUp(self):
@@ -674,7 +674,7 @@ class OAWeatherDetailview(Screen):
 			hourly = today["hourly"]
 			precip = f"{round(hourly[0]['precip'])} %" if len(hourly) else self.na  # workaround: use value from next hour if available
 			windSpd = f"{round(current.get('windSpd', 0))} {'km/h' if config.plugins.OAWeather.windspeedMetricUnit.value == 'km/h' else 'm/s'}"
-			windDir = f"{_(weatherhandler.WI.directionsign(round(current.get('windDir', 0))))}"
+			windDir = f"{_(weatherhandler.WI.direction_sign(round(current.get('windDir', 0))))}"
 			windGusts = f"{round(current.get('windGust', 0))} {'km/h' if config.plugins.OAWeather.windspeedMetricUnit.value == 'km/h' else 'm/s'}"
 			uvIndex = f"{round(current.get('uv', 0))}"
 			visibility = f"{round(current.get('vis', 0))} km"
@@ -713,7 +713,7 @@ class OAWeatherDetailview(Screen):
 						humid = f"{round(hour.get('rh', 0))} %"
 						precip = f"{round(hour.get('precip', 0))} %"
 						windSpd = f"{round(hour.get('windSpd', 0))} {'km/h' if config.plugins.OAWeather.windspeedMetricUnit.value == 'km/h' else 'm/s'}"
-						windDir = f"{_(weatherhandler.WI.directionsign(round(hour.get('windDir', 0))))}"
+						windDir = f"{_(weatherhandler.WI.direction_sign(round(hour.get('windDir', 0))))}"
 						windGusts = f"{round(hour.get('windGust', 0))} {'km/h' if config.plugins.OAWeather.windspeedMetricUnit.value == 'km/h' else 'm/s'}"
 						uvIndex = f"{round(hour.get('uv', 0))}"
 						visibility = f"{round(hour.get('vis', 0))} km"
@@ -776,7 +776,7 @@ class OAWeatherDetailview(Screen):
 					humid = f"{round(humidList[idx])} %"
 					precip = f"{round(precipList[idx])} %"
 					windSpd = f"{round(wSpeedList[idx])} {'km/h' if config.plugins.OAWeather.windspeedMetricUnit.value == 'km/h' else 'm/s'}"
-					windDir = f"{_(weatherhandler.WI.directionsign(round(round(wDirList[idx]))))}"
+					windDir = f"{_(weatherhandler.WI.direction_sign(round(round(wDirList[idx]))))}"
 					windGusts = f"{round(wGustList[idx])} {'km/h' if config.plugins.OAWeather.windspeedMetricUnit.value == 'km/h' else 'm/s'}"
 					uvIndex = f"{round(uvList[idx])}"
 					visibility = f"{round(visList[idx] / 1000)} km"
@@ -811,7 +811,7 @@ class OAWeatherDetailview(Screen):
 			precip = f"{round(hourly[0].get('pop', 0) * 100)} %"
 			wind = fulldata.get('wind', {})
 			windSpd = f"{round(wind.get('speed', 0))} {'km/h' if config.plugins.OAWeather.windspeedMetricUnit.value == 'km/h' else 'm/s'}"
-			windDir = f"{_(weatherhandler.WI.directionsign(round(wind.get('deg', 0))))}"
+			windDir = f"{_(weatherhandler.WI.direction_sign(round(wind.get('deg', 0))))}"
 			windGusts = f"{round(hourly[0].get('wind', {}).get('gust', 0))} {'km/h' if config.plugins.OAWeather.windspeedMetricUnit.value == 'km/h' else 'm/s'}"
 			uvIndex = ""  # OWM does not support UV-index at all
 			visibility = f"{round(fulldata.get('visibility', 0) / 1000)} km"
@@ -846,7 +846,7 @@ class OAWeatherDetailview(Screen):
 						precip = f"{round(hour.get('pop', 0) * 100)} %"
 						wind = hour.get("wind", {})
 						windSpd = f"{round(wind.get('speed', 0))} {'km/h' if config.plugins.OAWeather.windspeedMetricUnit.value == 'km/h' else 'm/s'}"
-						windDir = f"{_(weatherhandler.WI.directionsign(round(wind.get('deg', 0))))}"
+						windDir = f"{_(weatherhandler.WI.direction_sign(round(wind.get('deg', 0))))}"
 						windGusts = f"{round(wind.get('gust', 0))} {'km/h' if config.plugins.OAWeather.windspeedMetricUnit.value == 'km/h' else 'm/s'}"
 						uvIndex = ""  # OWM does not support UV-index at all
 						visibility = f"{round(hour.get('visibility', 0) / 1000)} km"
